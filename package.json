@@ -1,0 +1,23 @@
+{
+  "name": "real_estate_sale",
+  "version": "1.0.0",
+  "description": "Real Estate transactions are financial transactions where we transfer ownership, something smart contracts are great for. Here, real estate ownership will be modeled by a non-fungible token (NFT) which will be used for ownership transfer from seller to the buyer.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Prasoon1308/Real_Estate_Sale.git"
+  },
+  "author": "prasoon1308@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Prasoon1308/Real_Estate_Sale/issues"
+  },
+  "homepage": "https://github.com/Prasoon1308/Real_Estate_Sale#readme",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "hardhat": "^2.13.0"
+  }
+}
