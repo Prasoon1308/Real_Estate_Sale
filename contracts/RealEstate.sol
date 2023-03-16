@@ -1,3 +1,5 @@
+// This file is for maintaining Real Estate as an ERC721 token.
+
 // File: @openzeppelin/contracts/utils/Counters.sol
 
 // OpenZeppelin Contracts v4.4.1 (utils/Counters.sol)
