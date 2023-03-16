@@ -3,7 +3,7 @@ const { expect } = import("chai");
 
 describe("Real Estate", () => {
   let realEstate, escrow;
-  let deployer, seller;
+  let deployer, seller, buyer, inspector, lender;
   let nftID = 1;
 
   beforeEach(async () => {
@@ -19,12 +19,17 @@ describe("Real Estate", () => {
 
     // Deploying Contracts
     realEstate = await RealEstate.deploy();
-    escrow = await Escrow.deploy(realEstate.address, nftID, seller, buyer);
+    escrow = await Escrow.deploy(
+      realEstate.address,
+      nftID,
+      seller.address,
+      buyer.address
+    );
   });
 
   describe("Deployment", async () => {
     it("sends an NFT to the seller/deployer", async () => {
-      expect(await realEstate.ownerOf(nftID)).to.equal(sender.address);
+      expect(await realEstate.ownerOf(nftID)).to.equal(seller.address);
     });
   });
   describe("Selling Real Estate", async () => {
@@ -35,7 +40,7 @@ describe("Real Estate", () => {
       // Sale of the NFT
       transaction = await escrow.connect(buyer).finalizeSale();
       await transaction.wait();
-      console.log("Sale is finalized by the buyer");
+      console.log("sale is finalized by the buyer");
 
       // After the sale owner of the NFT should be the buyer
       expect(await realEstate.ownerOf(nftID)).to.equal(buyer.address);
