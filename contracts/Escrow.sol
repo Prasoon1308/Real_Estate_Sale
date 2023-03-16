@@ -29,12 +29,25 @@ contract Escrow {
     ) {
         nftAddress = _nftAddress;
         nftID = _nftID;
-        purchasePrice=_purchasePrice;
-        escrowAmount =_escrowAmount;
+        purchasePrice = _purchasePrice;
+        escrowAmount = _escrowAmount;
         seller = _seller;
         buyer = _buyer;
         inspector = _inspector;
-        lender = _lender
+        lender = _lender;
+    }
+
+    modifier onlyBuyer() {
+        require(msg.sender == buyer, "Only buyer can call this function!");
+        _;
+    }
+
+    function depositEarnest() public payable onlyBuyer {
+        require(msg.value >= escrowAmount);
+    }
+
+    function getBalance() public view returns (uint) {
+        return address(this).balance;
     }
 
     function finalizeSale() public {
