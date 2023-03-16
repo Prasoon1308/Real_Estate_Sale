@@ -11,3 +11,8 @@ Steps:
 ->Lender funds
 ->Transfer ownership
 ->Seller gets paid
+
+RealEstate.sol file is for maintaining Real Estate as an ERC721 token.
+Escrow.sol file is for transferring ownership of the token and transaction of funds.
+
+The NFTs are stored on a IPFS (interplanetary file system) which is a kind of a blockcahin system(not exactly) where files are stored over different nodes and not on a central server.
