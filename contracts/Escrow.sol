@@ -17,6 +17,23 @@ contract Escrow {
     address public inspector;
     address public lender;
 
+    modifier onlyBuyer() {
+        require(msg.sender == buyer, "Only buyer can call this function!");
+        _;
+    }
+    modifier onlyInspector() {
+        require(
+            msg.sender == inspector,
+            "Only inspector can call this function!"
+        );
+        _;
+    }
+
+    bool public inspectionPassed = false;
+    mapping(address => bool) public approval;
+
+    receive() external payable {} // required to make the contract receive transactions
+
     constructor(
         address _nftAddress,
         uint256 _nftID,
@@ -37,20 +54,47 @@ contract Escrow {
         lender = _lender;
     }
 
-    modifier onlyBuyer() {
-        require(msg.sender == buyer, "Only buyer can call this function!");
-        _;
+    function depositEarnest() public payable onlyBuyer {
+        require(msg.value >= escrowAmount); // kind of down payment for the escrow account
     }
 
-    function depositEarnest() public payable onlyBuyer {
-        require(msg.value >= escrowAmount);
+    function updateInspectionStatus(bool _passed) public onlyInspector {
+        inspectionPassed = _passed;
+    }
+
+    function approveSale() public {
+        approval[msg.sender] = true;
     }
 
     function getBalance() public view returns (uint) {
         return address(this).balance;
     }
 
+    // If the sale is cancelled the amount should return to the seller
+
+    function cancelSale() public {
+        if (inspectionPassed == false) {
+            payable(buyer).transfer(address(this).balance);
+        } else {
+            payable(seller).transfer(address(this).balance);
+        }
+    }
+
     function finalizeSale() public {
+        require(inspectionPassed, "must pass the inspection");
+        require(approval[buyer], "must be passed by the buyer");
+        require(approval[seller], "must be passed by the seller");
+        require(approval[lender], "must be passed by the lender");
+        require(
+            address(this).balance >= purchasePrice,
+            "must have enough funds for the sale"
+        );
+
+        // send all the balance from smart contract to the seller
+        (bool success, ) = payable(seller).call{value: address(this).balance}(
+            ""
+        );
+        require(success);
         // Transfer ownership of property
         IERC721(nftAddress).transferFrom(seller, buyer, nftID);
     }
